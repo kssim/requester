@@ -13,6 +13,7 @@ def process_with_request_file(options):
 
     session.update_connection_info(method=getattr(parser, "method", ""))
     session.update_headers(getattr(parser, "headers", {}))
+    session.update_body(getattr(parser, "body", ""))
 
     ip = get_validate_ip_address(options.host)
     if ip is None:

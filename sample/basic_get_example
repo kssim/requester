@@ -1,4 +1,4 @@
-GET /upload/upload HTTP/1.1
+GET /upload/upload/ HTTP/1.1
 Host: 192.168.40.245
 Connection: keep-alive
 Cache-Control: max-age=0

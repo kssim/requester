@@ -5,14 +5,17 @@ import requests
 class Session(object):
 
     __attrs__ = [
-        "session", "request_headers", "method", "allow_redirects", "timeout"
+        "session", "request_headers", "request_body", "method", "allow_redirects", "timeout"
     ]
 
 
     def __init__(self):
         self.session = requests.Session()
         self.allow_redirects = False
-        self.timeout = 10
+        self.timeout = 30
+
+        self.request_headers = {}
+        self.request_body = ""
 
 
     def update_headers(self, headers):
@@ -20,8 +23,12 @@ class Session(object):
         self.session.headers.update(self.request_headers)
 
 
+    def update_body(self, body):
+        self.request_body = body
+
+
     def update_connection_info(self,
-            method = None, allow_redirects = False, timeout = 10):
+            method = None, allow_redirects = False, timeout = 30):
         self.method = method
         self.allow_redirects = False
         self.timeout = timeout
@@ -32,6 +39,8 @@ class Session(object):
 
         if self.method == "GET":
             response = self.session.get(url, allow_redirects = self.allow_redirects, timeout = self.timeout)
+        elif self.method == "POST":
+            response = self.session.post(url, allow_redirects = self.allow_redirects, timeout = self.timeout, data = self.request_body)
         else:
             print ("Error : The HTTP method is not valid")
             return False
@@ -51,6 +60,9 @@ class Session(object):
         print ("= Request header =")
         for key, value in self.request_headers.items():
             print ("%s : %s" % (key, value))
+        print ("======================================================")
+        print ("= Request body =")
+        print (self.request_body)
         print ("======================================================")
 
 
