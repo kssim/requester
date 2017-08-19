@@ -7,6 +7,9 @@ class RequestFileParser(object):
     ]
 
     def __init__(self, file_name):
+        if file_name is None:
+            return
+
         self.file_name = file_name
 
         self.start_line = []

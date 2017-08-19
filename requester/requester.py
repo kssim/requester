@@ -11,32 +11,24 @@ def process_with_request_file(options):
     session = Session()
     parser = RequestFileParser(options.file)
 
-    session.update_connection_info(method=getattr(parser, "method", ""))
-    session.update_headers(getattr(parser, "headers", {}))
+    session.update_connection_info(method=getattr(parser, "method", "GET"))
+    session.update_headers(getattr(parser, "headers", None))
     session.update_body(getattr(parser, "body", ""))
 
-    ip = get_validate_ip_address(options.host)
-    if ip is None:
-        return False
-
-    request_url = make_request_url(ip, getattr(parser, "uri", ""))
+    request_url = make_request_url(options.host, options.port, getattr(parser, "uri", ""))
     session.send(request_url)
 
 
 def main():
-    parser = OptionParser("Usage: %prog ")
-    parser.add_option("--port", dest="port", type="int", help="port name(default 80)")
-    parser.add_option("--host", dest="host", type="string", help="host name or ip address")
-    parser.add_option("-f", "--file", dest="file", type="string", help="request file name(include full path)")
+    option = OptionParser("Usage: %prog ")
+    option.add_option("--port", dest="port", type="int", help="port name(default 80)")
+    option.add_option("--host", dest="host", type="string", help="host name or ip address")
+    option.add_option("-f", "--file", dest="file", type="string", help="request file name(include full path)")
 
-    (options, args) = parser.parse_args()
+    (options, args) = option.parse_args()
 
-    if options.port is None or options.host is None:
-        parser.print_help()
-        exit(1)
-
-    if options.file is None:
-        print ("Error : Not implement.")
+    if options.host is None or options.port is None:
+        option.print_help()
         exit(1)
 
     process_with_request_file(options)

@@ -19,7 +19,7 @@ class Session(object):
 
 
     def update_headers(self, headers):
-        self.request_headers = headers
+        self.request_headers = getattr(self.session, "headers") if headers is None else headers
         self.session.headers.update(self.request_headers)
 
 
@@ -27,8 +27,7 @@ class Session(object):
         self.request_body = body
 
 
-    def update_connection_info(self,
-            method = None, allow_redirects = False, timeout = 30):
+    def update_connection_info(self, method, allow_redirects = False, timeout = 30):
         self.method = method
         self.allow_redirects = False
         self.timeout = timeout
@@ -77,5 +76,5 @@ class Session(object):
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Response body =")
-        print (response.text)
+        print (response.text.encode("utf-8"))
         print ("======================================================")

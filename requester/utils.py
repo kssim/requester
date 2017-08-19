@@ -3,9 +3,14 @@
 import socket
 import ipaddress
 
-def make_request_url(host, uri):
-    request_url = "http://%s%s" % (host, uri)
-    return request_url
+def make_request_url(host, port, uri):
+    if "http://" in host or "https://" in host:
+        return "%s%s" % (host, uri)
+
+    if port == 443:
+        return "https://%s%s" % (host, uri)
+
+    return "http://%s%s" % (host, uri)
 
 
 def convert_hostname_to_ip(host_name):
