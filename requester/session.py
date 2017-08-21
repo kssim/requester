@@ -5,7 +5,7 @@ import requests
 class Session(object):
 
     __attrs__ = [
-        "session", "request_headers", "request_body", "method", "allow_redirects", "timeout"
+        "session", "request_headers", "request_body", "method", "allow_redirects", "timeout", "response"
     ]
 
 
@@ -16,6 +16,7 @@ class Session(object):
 
         self.request_headers = {}
         self.request_body = ""
+        self.response = None
 
 
     def update_headers(self, headers):
@@ -34,20 +35,22 @@ class Session(object):
 
 
     def send(self, url, verbose=True):
-        response = []
-
-        if self.method == "GET":
-            response = self.session.get(url, allow_redirects = self.allow_redirects, timeout = self.timeout)
-        elif self.method == "POST":
-            response = self.session.post(url, allow_redirects = self.allow_redirects, timeout = self.timeout, data = self.request_body)
-        else:
-            print ("Error : The HTTP method is not valid")
+        try:
+            if self.method == "GET":
+                self.response = self.session.get(url, allow_redirects = self.allow_redirects, timeout = self.timeout)
+            elif self.method == "POST":
+                self.response = self.session.post(url, allow_redirects = self.allow_redirects, timeout = self.timeout, data = self.request_body)
+            else:
+                print ("Error : The HTTP method is not valid")
+                return False
+        except requests.exceptions.ConnectionError:
+            print ("Error : The host is not reachable")
             return False
 
         if verbose == True:
             self.show_request()
             print ("\n\n")
-            self.show_response(response)
+            self.show_response()
 
         return True
 
@@ -65,16 +68,16 @@ class Session(object):
         print ("======================================================")
 
 
-    def show_response(self, response):
+    def show_response(self):
         print ("** RESPONSE **")
         print ("======================================================")
-        print ("Status code : %s" % response.status_code)
-        print ("Status reasone : %s" % response.reason)
+        print ("Status code : %s" % self.response.status_code)
+        print ("Status reasone : %s" % self.response.reason)
         print ("======================================================")
         print ("= Response header =")
-        for key, value in response.headers.items():
+        for key, value in self.response.headers.items():
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Response body =")
-        print (response.text.encode("utf-8"))
+        print (self.response.text.encode("utf-8"))
         print ("======================================================")
