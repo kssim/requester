@@ -52,7 +52,8 @@ def process_with_pcap_file(options):
 
         host = make_host(headers, stream[DST_IP])
         request_url = make_request_url(host, 80, getattr(parser, "uri", ""))
-        session.send(request_url, verbose=False)
+        if session.send(request_url, verbose=False) is False:
+            continue
 
         response_data.append(getattr(session, "response", None))
 

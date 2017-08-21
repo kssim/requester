@@ -44,7 +44,7 @@ class Session(object):
                 print ("Error : The HTTP method is not valid")
                 return False
         except requests.exceptions.ConnectionError:
-            print ("Error : The host is not reachable")
+            print ("Error : The host(%s) is not reachable" % url)
             return False
 
         if verbose == True:
