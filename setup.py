@@ -10,10 +10,11 @@ packages = ["requester"]
 
 requires = [
     "requests>=2.4.3",
-    "ipaddress>=1.0.18"
+    "ipaddress>=1.0.18",
+    "scapy>=2.3.3"
 ]
 
-with open("README.rst", "r", "utf-8") as f:
+with open("README.md", "r") as f:
     readme = f.read()
 
 setup(
@@ -26,11 +27,12 @@ setup(
     url = "https://github.com/kssim/requester",
     packages = packages,
     packages_data = {},
-    package_dir = {}
+    package_dir = {},
     include_package_data = True,
     install_requires = requires,
     license = "MIT",
     zip_safe = False,
+    scripts = ["bin/requester"],
     classifiers = (
         "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
