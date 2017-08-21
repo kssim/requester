@@ -42,8 +42,8 @@ class PcapHandler(object):
         if self.pcap_data is None:
             return False
 
-        self.write_request_data()
         self.pcap_handler()
+        self.write_request_data()
         return True
 
 

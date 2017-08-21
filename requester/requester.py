@@ -10,14 +10,26 @@ from utils import (make_request_url, make_host)
 
 def process_with_request_file(options):
     session = Session()
-    parser = RequestFileParser(options.file)
-    parser.run()
 
-    session.update_connection_info(method=getattr(parser, "method", "GET"))
-    session.update_headers(getattr(parser, "headers", None))
-    session.update_body(getattr(parser, "body", ""))
+    if options.file is None:
+        method = "GET"
+        headers = None
+        body = ""
+        uri = ""
+    else:
+        parser = RequestFileParser(options.file)
+        parser.run()
 
-    request_url = make_request_url(options.host, options.port, getattr(parser, "uri", ""))
+        method = getattr(parser, "method", "GET")
+        headers = getattr(parser, "headers", None)
+        body = getattr(parser, "body", "")
+        uri = getattr(parser, "uri", "")
+
+    session.update_connection_info(method=method)
+    session.update_headers(headers)
+    session.update_body(body)
+
+    request_url = make_request_url(options.host, options.port, uri)
     session.send(request_url)
 
 

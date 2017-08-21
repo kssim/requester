@@ -48,7 +48,7 @@ class RequestParser(object):
         "start_line", "headers", "method", "uri", "version", "body", "stream"
     ]
 
-    def __init__(self, stream):
+    def __init__(self, stream=""):
         self.start_line = []
         self.headers = {}
 
