@@ -21,7 +21,7 @@ setup(
     name = "requester",
     version = "0.5.0",
     description = "Python HTTP/HTTPS Requester.",
-    long_description = "",
+    long_description = readme,
     author = "kssim",
     author_email = "ksub0912@gmail.com",
     url = "https://github.com/kssim/requester",
