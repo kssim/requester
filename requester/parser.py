@@ -66,6 +66,10 @@ class RequestParser(object):
 
 
     def run(self):
+        if self.stream == "":
+            print ("Error : Request stream is empty.")
+            return
+
         self.parse()
         self.parse_start_line()
 
@@ -114,14 +118,15 @@ class RequestFileParser(RequestParser):
     ]
 
     def __init__(self, file_name):
-        if file_name is None:
-            return
-
         RequestParser.__init__(self)
         self.file_name = file_name
 
 
     def run(self):
+        if self.file_name == "":
+            print ("Error : File name not entered.")
+            return
+
         self.parse()
         RequestParser.parse_start_line(self)
 
@@ -129,7 +134,7 @@ class RequestFileParser(RequestParser):
     def parse(self):
         with open(str(self.file_name)) as f:
             # HTTP request start-line.
-            self.start_line = f.readline().split(" ")
+            self.start_line = f.readline().strip().split(" ")
             end_header = False
 
             for line in f:

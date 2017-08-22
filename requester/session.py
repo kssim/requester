@@ -30,7 +30,7 @@ class Session(object):
 
     def update_connection_info(self, method, allow_redirects = False, timeout = 30):
         self.method = method
-        self.allow_redirects = False
+        self.allow_redirects = allow_redirects
         self.timeout = timeout
 
 
