@@ -4,7 +4,7 @@
 class ResponseParser(object):
 
     __attrs__ = [
-        "start_line", "headers", "body"
+        "start_line", "headers", "body", "stream"
     ]
 
     def __init__(self, stream):
@@ -16,6 +16,10 @@ class ResponseParser(object):
 
 
     def run(self):
+        if self.stream == "":
+            print ("Error : Response stream is empty.")
+            return
+
         self.parser()
         self.parser_start_line()
 
@@ -40,6 +44,8 @@ class ResponseParser(object):
                 self.headers[key] = line[len(key)+1:].replace("\n", "").strip()
             else:
                 self.body += line.strip() + "\n"
+
+        self.body = self.body.strip()
 
 
 class RequestParser(object):
