@@ -5,7 +5,7 @@ python:
 install: "make"
 cache: pip
 jobs:
-	include:
-		- stage: coverage
-		  python: 2.7
-		  script: codecov
+  include:
+    - stage: coverage
+      python: 2.7
+      script: codecov
