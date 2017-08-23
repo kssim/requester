@@ -8,4 +8,6 @@ jobs:
   include:
     - stage: coverage
       python: 2.7
-      script: codecov
+      script:
+        - make coverage
+        - codecov -f coverage.xml
