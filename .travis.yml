@@ -1,0 +1,11 @@
+sudo: false
+language: python
+python:
+  - "2.7"
+install: "make"
+cache: pip
+jobs:
+	include:
+		- stage: coverage
+		  python: 2.7
+		  script: codecov
