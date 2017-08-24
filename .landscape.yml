@@ -1,0 +1,9 @@
+test-warnings: false
+strictness: veryhigh
+max-line-length: 150
+autodetect: true
+requirements: requirements.txt
+ignore-paths:
+	- samples
+python-targets:
+    - 2
