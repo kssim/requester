@@ -4,6 +4,6 @@ max-line-length: 150
 autodetect: true
 requirements: requirements.txt
 ignore-paths:
-	- samples
+    - samples
 python-targets:
     - 2
