@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from optparse import OptionParser
@@ -71,7 +70,7 @@ def main():
     option.add_option("-e", "--extraction", dest="extra_mode", action="store_true", help="Extract http request from packet dump file.")
     option.add_option("-c", "--check", dest="check_mode", action="store_true", help="Send an http request in the packet dump and compare the response.")
 
-    (options, args) = option.parse_args()
+    (options, _) = option.parse_args()
 
     # Request extraction mode in packet dump.
     if options.extra_mode and options.pcap:

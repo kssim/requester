@@ -99,7 +99,7 @@ class RequestParser(object):
                 # HTTP request body (Only hex values can be input.)
                 try:
                     self.body += line.strip().decode("hex")
-                except:
+                except Exception:
                     print ("Error : The request body only supports hex values.")
                     self.body = ""
                     break
@@ -142,7 +142,7 @@ class RequestFileParser(RequestParser):
                     # HTTP request body (Only hex values can be input.)
                     try:
                         self.body += line.strip().decode("hex")
-                    except:
+                    except Exception:
                         print ("Error : The request body only supports hex values.")
                         self.body = ""
                         break
