@@ -1,3 +1,5 @@
+# Requester
+
 [![PyPI version](https://badge.fury.io/py/requester.svg)](https://github.com/kssim/requester)
 [![Build Status](https://travis-ci.org/kssim/requester.svg?branch=master)](https://github.com/kssim/requester)
 [![codecov](https://codecov.io/gh/kssim/requester/branch/master/graph/badge.svg)](https://github.com/kssim/requester)
@@ -5,10 +7,8 @@
 [![Python](https://img.shields.io/badge/python-2.7-brightgreen.svg?style=flat)](https://github.com/kssim/requester)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/kssim/requester)
 
-# Requester : HTTP/HTTPS request simulator #
-
-Requester is a python based HTTP / HTTPS request simulator.  
-Basically, you create a request statement, send the request as it is, and check the response.  
+Requester is a python based HTTP / HTTPS request simulator.
+Basically, you create a request statement, send the request as it is, and check the response.
 In addition, it extracts the request from the pcap file, or sends the extracted request and compares the response with the response of the pcap file.
 
 
@@ -72,5 +72,5 @@ I'll be writing soon.
 
 
 # Contribute
-If you have an idea or issue, feel free to open an issue or make pull request.  
+If you have an idea or issue, feel free to open an issue or make pull request.
 I'll create and share a structured process to contribute soon.
