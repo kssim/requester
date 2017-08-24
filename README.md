@@ -7,9 +7,9 @@
 [![Python](https://img.shields.io/badge/python-2.7-brightgreen.svg?style=flat)](https://github.com/kssim/requester)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/kssim/requester)
 
-Requester is a python based HTTP / HTTPS request simulator.
-Basically, you create a request statement, send the request as it is, and check the response.
-In addition, it extracts the request from the pcap file, or sends the extracted request and compares the response with the response of the pcap file.
+Requester is a python based HTTP / HTTPS request simulator.  
+Basically, you create a request statement, send the request as it is, and check the response.  
+In addition, it extracts the request from the pcap file, or sends the extracted request and compares the response with the response of the pcap file.  
 
 
 # Installation
@@ -72,5 +72,5 @@ I'll be writing soon.
 
 
 # Contribute
-If you have an idea or issue, feel free to open an issue or make pull request.
+If you have an idea or issue, feel free to open an issue or make pull request.  
 I'll create and share a structured process to contribute soon.
