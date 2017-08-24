@@ -4,3 +4,5 @@ scapy==2.3.3
 pytest==3.2.1
 pytest-cov==2.5.1
 codecov
+tox
+detox
