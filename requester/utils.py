@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import socket
-import ipaddress
 
 def make_host(headers, dst_ip):
     if "Host" in headers:

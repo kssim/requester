@@ -14,7 +14,6 @@ class ResponseParser(object):
         self.body = ""
         self.stream = stream
 
-
     def run(self):
         if self.stream == "":
             print ("Error : Response stream is empty.")
@@ -23,25 +22,23 @@ class ResponseParser(object):
         self.parser()
         self.parser_start_line()
 
-
     def parser_start_line(self):
         if len(self.start_line) < 3:
             print ("Error : It does not fit the start-line format.")
             return
-
 
     def parser(self):
         self.start_line = self.stream.splitlines()[:1][0].split(" ")
         end_header = False
 
         for line in self.stream.splitlines()[1:]:
-            if end_header == False and line == "":
+            if end_header is False and line == "":
                 end_header = True
                 continue
 
-            if end_header == False:
+            if end_header is False:
                 key = line.split(":")[0].lower()
-                self.headers[key] = line[len(key)+1:].replace("\n", "").strip()
+                self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
                 self.body += line.strip() + "\n"
 
@@ -64,7 +61,6 @@ class RequestParser(object):
         self.body = ""
         self.stream = stream
 
-
     def run(self):
         if self.stream == "":
             print ("Error : Request stream is empty.")
@@ -72,7 +68,6 @@ class RequestParser(object):
 
         self.parse()
         self.parse_start_line()
-
 
     def parse_start_line(self):
         if len(self.start_line) != 3:
@@ -87,20 +82,19 @@ class RequestParser(object):
             print ("Error : This program does not cover the HTTP/1.0 version.")
             return
 
-
     def parse(self):
         self.start_line = self.stream.splitlines()[:1][0].split(" ")
         end_header = False
 
         for line in self.stream.splitlines()[1:]:
-            if end_header == False and line == "":
+            if end_header is False and line == "":
                 end_header = True
                 continue
 
-            if end_header == False:
+            if end_header is False:
                 # HTTP request header fields.
                 key = line.split(":")[0].lower()
-                self.headers[key] = line[len(key)+1:].replace("\n", "").strip()
+                self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
                 # HTTP request body (Only hex values can be input.)
                 try:
@@ -121,7 +115,6 @@ class RequestFileParser(RequestParser):
         RequestParser.__init__(self)
         self.file_name = file_name
 
-
     def run(self):
         if self.file_name == "":
             print ("Error : File name not entered.")
@@ -130,7 +123,6 @@ class RequestFileParser(RequestParser):
         self.parse()
         RequestParser.parse_start_line(self)
 
-
     def parse(self):
         with open(str(self.file_name)) as f:
             # HTTP request start-line.
@@ -138,14 +130,14 @@ class RequestFileParser(RequestParser):
             end_header = False
 
             for line in f:
-                if end_header == False and (line == "\r\n" or line == "\n"):
+                if end_header is False and (line == "\r\n" or line == "\n"):
                     end_header = True
                     continue
 
-                if end_header == False:
+                if end_header is False:
                     # HTTP request header fields.
                     key = line.split(":")[0].lower()
-                    self.headers[key] = line[len(key)+1:].replace("\n", "").strip()
+                    self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
                 else:
                     # HTTP request body (Only hex values can be input.)
                     try:

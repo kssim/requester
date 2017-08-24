@@ -10,7 +10,6 @@ packages = ["requester"]
 
 requires = [
     "requests>=2.4.3",
-    "ipaddress>=1.0.18",
     "scapy>=2.3.3",
     "pytest>=3.2.1",
     "pytest-cov>=2.5.1"

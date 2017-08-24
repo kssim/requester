@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from scapy.all import *
+from scapy.all import (rdpcap, scapy)
 
 from parser import ResponseParser
 
@@ -11,6 +11,7 @@ PAYLOAD = 2
 START_LINE = 2
 HEADERS = 3
 BODY = 4
+
 
 class PcapHandler(object):
 
@@ -27,7 +28,6 @@ class PcapHandler(object):
         self.response_data_raw = []
         self.response_data = []
 
-
     def read_pcap_file(self):
         try:
             pcap_data = rdpcap(self.file_name)
@@ -37,7 +37,6 @@ class PcapHandler(object):
         else:
             return pcap_data
 
-
     def extraction_request(self):
         if self.pcap_data is None:
             return False
@@ -45,7 +44,6 @@ class PcapHandler(object):
         self.pcap_handler()
         self.write_request_data()
         return True
-
 
     def prepare_comparison_response(self):
         if self.pcap_data is None:
@@ -55,18 +53,16 @@ class PcapHandler(object):
         self.parse_response_data_in_pcap()
         return True
 
-
     def parse_response_data_in_pcap(self):
         for data in self.response_data_raw:
             parser = ResponseParser(data[PAYLOAD])
             parser.run()
 
-            data_tuple = ( data[SRC_IP], data[DST_IP],          \
-                            getattr(parser, "start_line", ""),  \
-                            getattr(parser, "headers", {}),     \
-                            getattr(parser, "body", "") )
+            data_tuple = (data[SRC_IP], data[DST_IP],
+                          getattr(parser, "start_line", ""),
+                          getattr(parser, "headers", {}),
+                          getattr(parser, "body", ""))
             self.response_data.append(data_tuple)
-
 
     def comparison_response_header(self, first_headers, second_headers):
         first_headers_keys = set(first_headers.keys())
@@ -82,7 +78,6 @@ class PcapHandler(object):
 
         return True
 
-
     def comparison_response(self, response_data):
         if len(response_data) != len(self.response_data):
             print ("Error : The number of response data does not match.")
@@ -90,14 +85,13 @@ class PcapHandler(object):
 
         for recived_data, pcap_data in zip(response_data, self.response_data):
             # Response header verification.
-            if self.comparison_response_header(recived_data.headers, pcap_data[HEADERS]) == False:
+            if self.comparison_response_header(recived_data.headers, pcap_data[HEADERS]) is False:
                 print ("The value of the response header is different.")
 
-            if pcap_data[BODY].encode("hex") == recived_data.text.encode("utf-8").replace("\r\n","").encode("hex"):
+            if pcap_data[BODY].encode("hex") == recived_data.text.encode("utf-8").replace("\r\n", "").encode("hex"):
                 print ("The value of the reponse body is same.")
             else:
                 print ("The value of the reponse body is different.")
-
 
     def seperate_response_and_request(self):
         for data in self.payload:
@@ -112,13 +106,12 @@ class PcapHandler(object):
 
             self.request_data.append((src_ip, dst_ip, payload))
 
-
     def pcap_handler(self):
         for packet in self.pcap_data:
             ip_layer = packet.getlayer("IP")
 
             tcp_layer = packet.getlayer("TCP")
-            if tcp_layer == None:
+            if tcp_layer is None:
                 continue
 
             if packet.getlayer("Raw"):
@@ -126,16 +119,15 @@ class PcapHandler(object):
                     self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
                     continue
 
-                pre_src = self.payload[len(self.payload)-1][SRC_IP]
-                pre_dst = self.payload[len(self.payload)-1][DST_IP]
+                pre_src = self.payload[len(self.payload) - 1][SRC_IP]
+                pre_dst = self.payload[len(self.payload) - 1][DST_IP]
 
                 if pre_src == ip_layer.src and pre_dst == ip_layer.dst:
-                    pre_payload = self.payload[len(self.payload)-1][PAYLOAD]
-                    self.payload[len(self.payload)-1] = (pre_src, pre_dst, pre_payload + str(tcp_layer.payload))
+                    pre_payload = self.payload[len(self.payload) - 1][PAYLOAD]
+                    self.payload[len(self.payload) - 1] = (pre_src, pre_dst, pre_payload + str(tcp_layer.payload))
                 else:
                     self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
         self.seperate_response_and_request()
-
 
     def write_request_data(self):
         for idx, data in enumerate(self.request_data):

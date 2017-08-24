@@ -8,6 +8,7 @@ from pcap import (PcapHandler, DST_IP, PAYLOAD)
 from parser import (RequestParser, RequestFileParser)
 from utils import (make_request_url, make_host)
 
+
 def process_with_request_file(options):
     session = Session()
 
@@ -36,7 +37,7 @@ def process_with_request_file(options):
 def process_with_pcap_file(options):
     pcap = PcapHandler(options.pcap)
     ret = pcap.prepare_comparison_response()
-    if ret == False:
+    if ret is False:
         return 1
 
     response_data = []
@@ -76,21 +77,18 @@ def main():
     if options.extra_mode and options.pcap:
         pcap = PcapHandler(options.pcap)
         ret = pcap.extraction_request()
-        return 0 if ret == True else 1
-
+        return 0 if ret is True else 1
 
     # Request extraction and response comparison mode in packetdump.
     if options.check_mode and options.pcap:
         return process_with_pcap_file(options)
 
-
     # Basic request transfer mode.
-    if (options.host and options.port)                                  \
-        and (options.extra_mode is None and options.check_mode is None) \
-        and (options.pcap is None):
+    if (options.host and options.port)                                      \
+            and (options.extra_mode is None and options.check_mode is None) \
+            and (options.pcap is None):
         process_with_request_file(options)
         return 0
-
 
     # Misuse.
     option.print_help()
