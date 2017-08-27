@@ -21,13 +21,14 @@ class PcapHandler(object):
 
     def __init__(self, file_name):
         self.file_name = file_name
-        self.pcap_data = self.read_pcap_file()
+        self.pcap_data = None
 
         self.payload = []
         self.request_data = []
         self.response_data_raw = []
         self.response_data = []
 
+    # Private Method #
     def read_pcap_file(self):
         try:
             pcap_data = rdpcap(self.file_name)
@@ -37,20 +38,12 @@ class PcapHandler(object):
         else:
             return pcap_data
 
-    def extraction_request(self):
+    def prepare_process(self):
+        self.pcap_data = self.read_pcap_file()
         if self.pcap_data is None:
             return False
 
-        self.pcap_handler()
-        self.write_request_data()
-        return True
-
-    def prepare_comparison_response(self):
-        if self.pcap_data is None:
-            return False
-
-        self.pcap_handler()
-        self.parse_response_data_in_pcap()
+        self.get_payload()
         return True
 
     def parse_response_data_in_pcap(self):
@@ -81,17 +74,19 @@ class PcapHandler(object):
     def comparison_response(self, response_data):
         if len(response_data) != len(self.response_data):
             print ("Error : The number of response data does not match.")
-            return
+            return False
 
         for recived_data, pcap_data in zip(response_data, self.response_data):
             # Response header verification.
-            if self.comparison_response_header(recived_data.headers, pcap_data[HEADERS]) is False:
+            if self.comparison_response_header(recived_data[HEADERS], pcap_data[HEADERS]) is False:
                 print ("The value of the response header is different.")
 
-            if pcap_data[BODY].encode("hex") == recived_data.text.encode("utf-8").replace("\r\n", "").encode("hex"):
+            if pcap_data[BODY].encode("hex") == recived_data[BODY].encode("utf-8").replace("\r\n", "").encode("hex"):
                 print ("The value of the reponse body is same.")
             else:
                 print ("The value of the reponse body is different.")
+
+        return True
 
     def seperate_response_and_request(self):
         for data in self.payload:
@@ -106,7 +101,7 @@ class PcapHandler(object):
 
             self.request_data.append((src_ip, dst_ip, payload))
 
-    def pcap_handler(self):
+    def get_payload(self):
         for packet in self.pcap_data:
             ip_layer = packet.getlayer("IP")
 
@@ -134,7 +129,22 @@ class PcapHandler(object):
             payload = data[PAYLOAD]
 
             file_name = "%s_request_%s" % (self.file_name, idx)
-            with open(file_name, "a") as f:
+            with open(file_name, "w") as f:
                 f.write(payload)
 
             print ("\"%s\" file has been created." % file_name)
+
+    # Public Method #
+    def extraction_request(self):
+        if self.prepare_process() is False:
+            return False
+
+        self.write_request_data()
+        return True
+
+    def prepare_comparison_response(self):
+        if self.prepare_process() is False:
+            return False
+
+        self.parse_response_data_in_pcap()
+        return True
