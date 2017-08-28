@@ -3,6 +3,20 @@
 import requests
 
 
+class RequestsSession(requests.Session):
+
+    def __init__(self):
+        requests.Session.__init__(self)
+
+    def prepare_request(self, request):
+        p = requests.Session.prepare_request(self, request)
+
+        if "content-length" in self.headers:
+            p.headers["content-length"] = self.headers["content-length"]
+
+        return p
+
+
 class Session(object):
 
     __attrs__ = [
@@ -11,7 +25,7 @@ class Session(object):
     ]
 
     def __init__(self):
-        self.session = requests.Session()
+        self.session = RequestsSession()
         self.allow_redirects = False
         self.timeout = 30
 
