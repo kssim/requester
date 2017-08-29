@@ -3,7 +3,7 @@
 from optparse import OptionParser
 
 from session import Session
-from pcap import (PcapHandler, DST_IP, PAYLOAD)
+from pcap import (PcapHandler, SRC_IP, DST_IP, PAYLOAD)
 from parser import (RequestParser, RequestFileParser)
 from utils import (make_request_url, make_host, make_dumy_body)
 
@@ -61,7 +61,10 @@ def process_with_pcap_file(options):
         if session.send(request_url, verbose=False) is False:
             continue
 
-        response_data.append(getattr(session, "response", None))
+        response = getattr(session, "response", None)
+        start_line = ["HTTP/1.1", response.status_code]
+        start_line += response.reason.split(" ")
+        response_data.append((stream[DST_IP], stream[SRC_IP], start_line, response.headers, response.text))
 
     pcap.comparison_response(response_data)
     return 0

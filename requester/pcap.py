@@ -52,7 +52,7 @@ class PcapHandler(object):
             parser.run()
 
             data_tuple = (data[SRC_IP], data[DST_IP],
-                          getattr(parser, "start_line", ""),
+                          getattr(parser, "start_line", []),
                           getattr(parser, "headers", {}),
                           getattr(parser, "body", ""))
             self.response_data.append(data_tuple)
@@ -78,10 +78,10 @@ class PcapHandler(object):
 
         for recived_data, pcap_data in zip(response_data, self.response_data):
             # Response header verification.
-            if self.comparison_response_header(recived_data.headers, pcap_data[HEADERS]) is False:
+            if self.comparison_response_header(recived_data[HEADERS], pcap_data[HEADERS]) is False:
                 print ("The value of the response header is different.")
 
-            if pcap_data[BODY].encode("hex") == recived_data.text.encode("utf-8").replace("\r\n", "").encode("hex"):
+            if pcap_data[BODY].encode("hex") == recived_data[BODY].encode("utf-8").replace("\r\n", "").encode("hex"):
                 print ("The value of the reponse body is same.")
             else:
                 print ("The value of the reponse body is different.")
