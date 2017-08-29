@@ -436,7 +436,7 @@ class TestRequestParserWithInValidPostRequestAndValidBody(object):
                               b"Accept-Encoding: gzip, deflate\r\n"
                               b"Accept-Language: ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4\r\n"
                               b"\r\n"
-                              b"------WebKi")
+                              b"------WebKit")
 
     @pytest.fixture(autouse=True)
     def setup(self):
@@ -615,7 +615,7 @@ class TestRequestFileParserWithFileNameAndInValidStreamAndBody(object):
                               b"Accept-Encoding: gzip, deflate\r\n"
                               b"Accept-Language: ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4\r\n"
                               b"\r\n"
-                              b"------WebKi")
+                              b"------WebKit")
 
     @pytest.fixture(autouse=True)
     def setup(self):
