@@ -99,12 +99,11 @@ class RequestParser(object):
                 key = line.split(":")[0]
                 self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
-                # HTTP request body (Only hex values can be input.)
+                # HTTP request body.
                 try:
                     self.body += line.strip().decode("hex")
                 except Exception:
-                    print ("Error : The request body only supports hex values.")
-                    self.body = ""
+                    self.body += line.strip()
                     break
 
 
@@ -149,11 +148,10 @@ class RequestFileParser(RequestParser):
                     key = line.split(":")[0]
                     self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
                 else:
-                    # HTTP request body (Only hex values can be input.)
+                    # HTTP request body.
                     try:
                         self.body += line.strip().decode("hex")
                     except Exception:
-                        print ("Warning : The request body only supports hex values.")
-                        self.body = ""
+                        self.body += line.strip()
                         break
         return True

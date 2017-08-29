@@ -82,7 +82,7 @@ class PcapHandler(object):
             if self.comparison_response_header(recived_data[HEADERS], pcap_data[HEADERS]) is False:
                 print ("The value of the response header is different.")
 
-            if pcap_data[BODY].encode("hex") == recived_data[BODY].encode("utf-8").replace("\r\n", "").encode("hex"):
+            if pcap_data[BODY].encode("hex") == recived_data[BODY].encode("utf-8").replace("\r\n", "").strip().encode("hex"):
                 print ("The value of the reponse body is same.")
             else:
                 print ("The value of the reponse body is different.")
