@@ -18,7 +18,8 @@ def process_with_request_file(options):
         uri = ""
     else:
         parser = RequestFileParser(options.file)
-        parser.run()
+        if parser.run() is False:
+            return 1
 
         method = getattr(parser, "method", "GET")
         headers = getattr(parser, "headers", None)
@@ -34,6 +35,7 @@ def process_with_request_file(options):
 
     request_url = make_request_url(options.host, options.port, uri)
     session.send(request_url)
+    return 0
 
 
 def process_with_pcap_file(options):
@@ -45,7 +47,8 @@ def process_with_pcap_file(options):
     response_data = []
     for stream in getattr(pcap, "request_data", []):
         parser = RequestParser(stream[PAYLOAD])
-        parser.run()
+        if parser.run() is False:
+            return 1
 
         session = Session()
         session.update_connection_info(method=getattr(parser, "method", "GET"))
@@ -95,8 +98,7 @@ def main():
     if (options.host and options.port)                                      \
             and (options.extra_mode is None and options.check_mode is None) \
             and (options.pcap is None):
-        process_with_request_file(options)
-        return 0
+        return process_with_request_file(options)
 
     # Misuse.
     option.print_help()

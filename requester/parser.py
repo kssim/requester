@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from os.path import exists
+
 
 class ResponseParser(object):
 
@@ -118,12 +120,19 @@ class RequestFileParser(RequestParser):
     def run(self):
         if self.file_name == "":
             print ("Error : File name not entered.")
-            return
+            return False
 
-        self.parse()
+        if self.parse() is False:
+            return False
+
         RequestParser.parse_start_line(self)
+        return True
 
     def parse(self):
+        if exists(str(self.file_name)) is False:
+            print ("Error : The request file could not be accessed.")
+            return False
+
         with open(str(self.file_name)) as f:
             # HTTP request start-line.
             self.start_line = f.readline().strip().split(" ")
@@ -143,6 +152,7 @@ class RequestFileParser(RequestParser):
                     try:
                         self.body += line.strip().decode("hex")
                     except Exception:
-                        print ("Error : The request body only supports hex values.")
+                        print ("Warning : The request body only supports hex values.")
                         self.body = ""
                         break
+        return True
