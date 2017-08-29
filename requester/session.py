@@ -2,6 +2,8 @@
 
 import requests
 
+from utils import make_ellipsis
+
 
 class RequestsSession(requests.Session):
 
@@ -79,7 +81,7 @@ class Session(object):
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Request body =")
-        print (self.request_body)
+        print (make_ellipsis(self.request_body))
         print ("======================================================")
 
     def show_response(self):
@@ -93,5 +95,5 @@ class Session(object):
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Response body =")
-        print (self.response.text.encode("utf-8"))
+        print (make_ellipsis(self.response.text.encode("utf-8")))
         print ("======================================================")

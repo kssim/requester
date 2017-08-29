@@ -30,3 +30,10 @@ def make_dumy_body(byte):
         dumy_body += "\x00"
 
     return dumy_body
+
+
+def make_ellipsis(text, max_len=1000):
+    if max_len <= 0 or len(text) < max_len:
+        return text
+
+    return text[:max_len] + "..."

@@ -3,7 +3,7 @@
 import pytest
 
 from requester.utils import (
-    make_host, make_request_url, make_dumy_body
+    make_host, make_request_url, make_dumy_body, make_ellipsis
 )
 
 
@@ -81,3 +81,16 @@ class TestMakeDumyBody(object):
     ])
     def test_make_dumy_body(self, byte, expected):
         assert make_dumy_body(byte) == expected
+
+
+class TestMakeEllipsis(object):
+
+    @pytest.mark.parametrize("text, max_len, expected", [
+        ("123456", 3, "123..."),
+        ("1234567890123", 10, "1234567890..."),
+        ("123", 5, "123"),
+        ("123", -1, "123"),
+        ("123", 0, "123")
+    ])
+    def test_make_ellipsis(self, text, max_len, expected):
+        assert make_ellipsis(text, max_len) == expected
