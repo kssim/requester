@@ -59,8 +59,8 @@ class PcapHandler(object):
             self.response_data.append(data_tuple)
 
     def comparison_response_header(self, first_headers, second_headers):
-        first_headers_keys = set(first_headers.keys())
-        second_headers_keys = set(second_headers.keys())
+        first_headers_keys = set([i.lower() for i in first_headers.keys()])
+        second_headers_keys = set([i.lower() for i in second_headers.keys()])
         intersection_keys = first_headers_keys.intersection(second_headers_keys)
 
         if first_headers_keys != intersection_keys or second_headers_keys != intersection_keys:
