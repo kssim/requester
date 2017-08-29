@@ -353,7 +353,7 @@ class TestRequestParserWithInValidPostRequestAndNoBody(object):
 
         start_line = ["POST", " /login", "HTTP/1.1"]
         headers = {
-            "host" : "8.8.8.8",
+            "host" : "8.8.8.4",
             "connection" : "keep-alive",
             "cache-control" : "max-age=0",
             "upgrade-insecure-requests" : "1",
@@ -447,7 +447,7 @@ class TestRequestParserWithInValidPostRequestAndValidBody(object):
 
         start_line = ["post", "/login ", "http/1.1"]
         headers = {
-            "Host" : "8.8.8.8",
+            "Host" : "8.8.8.9",
             "connection" : "keep-alive",
             "cache-control" : "max-age=0",
             "content-lengh" : "10",

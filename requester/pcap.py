@@ -3,6 +3,7 @@
 from scapy.all import (rdpcap, scapy)
 
 from parser import ResponseParser
+from structures import CaseInsensitiveDict
 
 SRC_IP = 0
 DST_IP = 1
@@ -53,7 +54,7 @@ class PcapHandler(object):
 
             data_tuple = (data[SRC_IP], data[DST_IP],
                           getattr(parser, "start_line", []),
-                          getattr(parser, "headers", {}),
+                          getattr(parser, "headers", CaseInsensitiveDict()),
                           getattr(parser, "body", ""))
             self.response_data.append(data_tuple)
 

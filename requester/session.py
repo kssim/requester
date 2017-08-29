@@ -3,6 +3,7 @@
 import requests
 
 from utils import make_ellipsis
+from structures import CaseInsensitiveDict
 
 
 class RequestsSession(requests.Session):
@@ -31,7 +32,7 @@ class Session(object):
         self.allow_redirects = False
         self.timeout = 30
 
-        self.request_headers = {}
+        self.request_headers = CaseInsensitiveDict()
         self.request_body = ""
         self.response = None
 

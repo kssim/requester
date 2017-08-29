@@ -6,6 +6,7 @@ from session import Session
 from pcap import (PcapHandler, SRC_IP, DST_IP, PAYLOAD)
 from parser import (RequestParser, RequestFileParser)
 from utils import (make_request_url, make_host, make_dumy_body)
+from structures import CaseInsensitiveDict
 
 
 def process_with_request_file(options):
@@ -22,7 +23,7 @@ def process_with_request_file(options):
             return 1
 
         method = getattr(parser, "method", "GET")
-        headers = getattr(parser, "headers", None)
+        headers = getattr(parser, "headers", CaseInsensitiveDict())
         body = getattr(parser, "body", "")
         uri = getattr(parser, "uri", "")
 
@@ -52,7 +53,7 @@ def process_with_pcap_file(options):
 
         session = Session()
         session.update_connection_info(method=getattr(parser, "method", "GET"))
-        headers = getattr(parser, "headers", None)
+        headers = getattr(parser, "headers", CaseInsensitiveDict())
         session.update_headers(headers)
         session.update_body(getattr(parser, "body", ""))
 

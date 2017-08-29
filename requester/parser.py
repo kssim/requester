@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os.path import exists
+from structures import CaseInsensitiveDict
 
 
 class ResponseParser(object):
@@ -11,7 +12,7 @@ class ResponseParser(object):
 
     def __init__(self, stream):
         self.start_line = []
-        self.headers = {}
+        self.headers = CaseInsensitiveDict()
 
         self.body = ""
         self.stream = stream
@@ -39,7 +40,7 @@ class ResponseParser(object):
                 continue
 
             if end_header is False:
-                key = line.split(":")[0].lower()
+                key = line.split(":")[0]
                 self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
                 self.body += line.strip() + "\n"
@@ -55,7 +56,7 @@ class RequestParser(object):
 
     def __init__(self, stream=""):
         self.start_line = []
-        self.headers = {}
+        self.headers = CaseInsensitiveDict()
 
         self.method = ""
         self.uri = ""
@@ -95,7 +96,7 @@ class RequestParser(object):
 
             if end_header is False:
                 # HTTP request header fields.
-                key = line.split(":")[0].lower()
+                key = line.split(":")[0]
                 self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
                 # HTTP request body (Only hex values can be input.)
@@ -145,7 +146,7 @@ class RequestFileParser(RequestParser):
 
                 if end_header is False:
                     # HTTP request header fields.
-                    key = line.split(":")[0].lower()
+                    key = line.split(":")[0]
                     self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
                 else:
                     # HTTP request body (Only hex values can be input.)
