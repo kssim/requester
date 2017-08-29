@@ -5,7 +5,7 @@ from optparse import OptionParser
 from session import Session
 from pcap import (PcapHandler, DST_IP, PAYLOAD)
 from parser import (RequestParser, RequestFileParser)
-from utils import (make_request_url, make_host)
+from utils import (make_request_url, make_host, make_dumy_body)
 
 
 def process_with_request_file(options):
@@ -24,6 +24,9 @@ def process_with_request_file(options):
         headers = getattr(parser, "headers", None)
         body = getattr(parser, "body", "")
         uri = getattr(parser, "uri", "")
+
+    # If dumy_body_byte is present, add dumy data.
+    body += make_dumy_body(options.dumy_body_byte)
 
     session.update_connection_info(method=method)
     session.update_headers(headers)
@@ -69,8 +72,14 @@ def main():
     option.add_option("--pcap", dest="pcap", type="string", help="packet dump file name(include full path)")
     option.add_option("-e", "--extraction", dest="extra_mode", action="store_true", help="Extract http request from packet dump file.")
     option.add_option("-c", "--check", dest="check_mode", action="store_true", help="Send an http request in the packet dump and compare the response.")
+    option.add_option("--dumy-body", dest="dumy_body_byte", type="int", help="Dummy data is added to request body for the set number of bytes.")
 
     (options, _) = option.parse_args()
+
+    # Misuse.
+    if options.pcap and options.dumy_body_byte:
+        print ("The two options are mutually exclusive.")
+        return 1
 
     # Request extraction mode in packet dump.
     if options.extra_mode and options.pcap:

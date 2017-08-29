@@ -18,3 +18,15 @@ def make_request_url(host, port, uri):
         return "https://%s%s" % (host, uri)
 
     return "http://%s%s" % (host, uri)
+
+
+def make_dumy_body(byte):
+    dumy_body = ""
+
+    if byte is None or byte <= 0:
+        return dumy_body
+
+    for i in range(byte):
+        dumy_body += "\x00"
+
+    return dumy_body

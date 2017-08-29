@@ -3,7 +3,7 @@
 import pytest
 
 from requester.utils import (
-    make_host, make_request_url
+    make_host, make_request_url, make_dumy_body
 )
 
 
@@ -68,3 +68,16 @@ class TestMakeRequestUrl(object):
     ])
     def test_make_invalid_request_url(self, host, port, url, expected):
         assert make_request_url(host, port, url) != expected
+
+
+class TestMakeDumyBody(object):
+
+    @pytest.mark.parametrize("byte, expected", [
+        (1, "\x00"),
+        (5, "\x00\x00\x00\x00\x00"),
+        (10, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
+        (None, ""),
+        (-1, "")
+    ])
+    def test_make_dumy_body(self, byte, expected):
+        assert make_dumy_body(byte) == expected
