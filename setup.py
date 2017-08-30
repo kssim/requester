@@ -12,7 +12,8 @@ requires = [
     "requests>=2.4.3",
     "scapy>=2.3.3",
     "pytest>=3.2.1",
-    "pytest-cov>=2.5.1"
+    "pytest-cov>=2.5.1",
+    "urllib3>=1.22"
 ]
 
 with open("README.md", "r") as f:
