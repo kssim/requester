@@ -21,7 +21,7 @@ with open("README.md", "r") as f:
 
 setup(
     name = "requester",
-    version = "0.5.1",
+    version = "0.6.0",
     description = "Python HTTP/HTTPS Requester.",
     long_description = readme,
     author = "kssim",
