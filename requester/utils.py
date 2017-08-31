@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module provides the utilities used by the requester.
+"""
+
 
 def make_host(headers, dst_ip):
     if "Host" in headers:

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module is responsible for the session-related logic.
+"""
+
 import requests
 
 from utils import make_ellipsis
@@ -7,7 +11,13 @@ from structures import CaseInsensitiveDict
 
 
 class RequestsSession(requests.Session):
+    """
+    In the requests library, if there is data in the body,
+    the content-length is computed with the size of the actual body
 
+    I wrote the following code to send to the content-length
+    you entered in the request statement.
+    """
     def __init__(self):
         requests.Session.__init__(self)
 

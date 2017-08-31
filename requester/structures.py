@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-# The following logic is the source from kennethreitz's "https://github.com/requests/requests/blob/master/requests/structures.py".
+
+"""
+This module contains the logic associated with the data structures used by the requester.
+
+In the code below, the CaseInsensitiveDict class is the code that kennethreitz wrote.
+- https://github.com/requests/requests/blob/master/requests/structures.py
+"""
 
 import collections
 

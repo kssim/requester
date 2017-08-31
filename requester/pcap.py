@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module is responsible for all processing related to the pcap file.
+"""
+
 from scapy.all import (rdpcap, scapy)
 
 from parser import ResponseParser
@@ -29,7 +33,6 @@ class PcapHandler(object):
         self.response_data_raw = []
         self.response_data = []
 
-    # Private Method #
     def read_pcap_file(self):
         try:
             pcap_data = rdpcap(self.file_name)
@@ -59,6 +62,7 @@ class PcapHandler(object):
             self.response_data.append(data_tuple)
 
     def comparison_response_header(self, first_headers, second_headers):
+        # Compare the contents of two header values with case-insensitivity.
         first_headers_keys = set([i.lower() for i in first_headers.keys()])
         second_headers_keys = set([i.lower() for i in second_headers.keys()])
         intersection_keys = first_headers_keys.intersection(second_headers_keys)
@@ -67,10 +71,15 @@ class PcapHandler(object):
             return False
 
         same_value_keys = set(o for o in intersection_keys if first_headers[o] == second_headers[o])
-        if intersection_keys != same_value_keys:
-            return True if (intersection_keys - same_value_keys) == set(['date']) else False
+        if intersection_keys == same_value_keys:
+            return True
 
-        return True
+        # The date field is treated as an exception because the data may be different.
+        if (intersection_keys - same_value_keys) == set(['date']):
+            print ("Info : The value of the date field is different but ignored.")
+            return True
+
+        return False
 
     def comparison_response(self, response_data):
         if len(response_data) != len(self.response_data):
@@ -82,6 +91,7 @@ class PcapHandler(object):
             if self.comparison_response_header(recived_data[HEADERS], pcap_data[HEADERS]) is False:
                 print ("The value of the response header is different.")
 
+            # Response body verification.
             if pcap_data[BODY].encode("hex") == recived_data[BODY].encode("utf-8").replace("\r\n", "").strip().encode("hex"):
                 print ("The value of the reponse body is same.")
             else:
@@ -108,21 +118,31 @@ class PcapHandler(object):
 
             tcp_layer = packet.getlayer("TCP")
             if tcp_layer is None:
+                # Do not treat non-tcp.
                 continue
 
-            if packet.getlayer("Raw"):
-                if len(self.payload) == 0:
-                    self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
-                    continue
+            if packet.getlayer("Raw") is None:
+                # Do not handle without payload.
+                continue
 
-                pre_src = self.payload[len(self.payload) - 1][SRC_IP]
-                pre_dst = self.payload[len(self.payload) - 1][DST_IP]
+            if len(self.payload) == 0:
+                # Before the payload processing, store the source ip and the destination ip.
+                self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
+                continue
 
-                if pre_src == ip_layer.src and pre_dst == ip_layer.dst:
-                    pre_payload = self.payload[len(self.payload) - 1][PAYLOAD]
-                    self.payload[len(self.payload) - 1] = (pre_src, pre_dst, pre_payload + str(tcp_layer.payload))
-                else:
-                    self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
+            pre_src = self.payload[len(self.payload) - 1][SRC_IP]
+            pre_dst = self.payload[len(self.payload) - 1][DST_IP]
+
+            if pre_src != ip_layer.src or pre_dst != ip_layer.dst:
+                # Case that was the first session.
+                self.payload.append((ip_layer.src, ip_layer.dst, str(tcp_layer.payload)))
+                continue
+
+            # Accumulates payloads to the case where there was an existing session.
+            pre_payload = self.payload[len(self.payload) - 1][PAYLOAD]
+            self.payload[len(self.payload) - 1] = (pre_src, pre_dst, pre_payload + str(tcp_layer.payload))
+
+        # Classify request and response data.
         self.seperate_response_and_request()
 
     def write_request_data(self):
@@ -135,7 +155,6 @@ class PcapHandler(object):
 
             print ("\"%s\" file has been created." % file_name)
 
-    # Public Method #
     def extraction_request(self):
         if self.prepare_process() is False:
             return False

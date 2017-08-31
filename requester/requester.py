@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module is the front-end processing module for user input.
+"""
+
 from optparse import OptionParser
 
 from session import Session

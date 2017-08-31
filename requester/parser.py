@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module parses the request/response header and body.
+"""
+
 from os.path import exists
 from structures import CaseInsensitiveDict
 
@@ -17,20 +21,13 @@ class ResponseParser(object):
         self.body = ""
         self.stream = stream
 
-    def run(self):
-        if self.stream == "":
-            print ("Error : Response stream is empty.")
-            return
-
-        self.parser()
-        self.parser_start_line()
-
-    def parser_start_line(self):
+    def parse_start_line(self):
         if len(self.start_line) < 3:
             print ("Error : It does not fit the start-line format.")
             return
 
     def parser(self):
+        # HTTP response start-line.
         self.start_line = self.stream.splitlines()[:1][0].split(" ")
         end_header = False
 
@@ -40,12 +37,22 @@ class ResponseParser(object):
                 continue
 
             if end_header is False:
+                # HTTP response header field.
                 key = line.split(":")[0]
                 self.headers[key] = line[len(key) + 1:].replace("\n", "").strip()
             else:
+                # HTTP response body.
                 self.body += line.strip() + "\n"
 
         self.body = self.body.strip()
+
+    def run(self):
+        if self.stream == "":
+            print ("Error : Response stream is empty.")
+            return
+
+        self.parser()
+        self.parse_start_line()
 
 
 class RequestParser(object):
@@ -64,14 +71,6 @@ class RequestParser(object):
         self.body = ""
         self.stream = stream
 
-    def run(self):
-        if self.stream == "":
-            print ("Error : Request stream is empty.")
-            return
-
-        self.parse()
-        self.parse_start_line()
-
     def parse_start_line(self):
         if len(self.start_line) != 3:
             print ("Error : It does not fit the start-line format.")
@@ -86,6 +85,7 @@ class RequestParser(object):
             return
 
     def parse(self):
+        # HTTP request start-line.
         self.start_line = self.stream.splitlines()[:1][0].split(" ")
         end_header = False
 
@@ -106,6 +106,14 @@ class RequestParser(object):
                     self.body += line.strip()
                     break
 
+    def run(self):
+        if self.stream == "":
+            print ("Error : Request stream is empty.")
+            return
+
+        self.parse()
+        self.parse_start_line()
+
 
 class RequestFileParser(RequestParser):
 
@@ -116,17 +124,6 @@ class RequestFileParser(RequestParser):
     def __init__(self, file_name):
         RequestParser.__init__(self)
         self.file_name = file_name
-
-    def run(self):
-        if self.file_name == "":
-            print ("Error : File name not entered.")
-            return False
-
-        if self.parse() is False:
-            return False
-
-        RequestParser.parse_start_line(self)
-        return True
 
     def parse(self):
         if exists(str(self.file_name)) is False:
@@ -154,4 +151,15 @@ class RequestFileParser(RequestParser):
                     except Exception:
                         self.body += line.strip()
                         break
+        return True
+
+    def run(self):
+        if self.file_name == "":
+            print ("Error : File name not entered.")
+            return False
+
+        if self.parse() is False:
+            return False
+
+        RequestParser.parse_start_line(self)
         return True
