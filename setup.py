@@ -4,8 +4,6 @@
 import os
 from setuptools import setup
 
-pwd = os.path.abspath(os.path.dirname(__file__))
-
 packages = ["requester"]
 
 requires = [
@@ -32,6 +30,8 @@ setup(
     package_dir = {},
     include_package_data = True,
     install_requires = requires,
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest"],
     license = "MIT",
     zip_safe = False,
     scripts = ["bin/requester"],
