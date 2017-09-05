@@ -40,4 +40,4 @@ def make_ellipsis(text, max_len=1000):
     if max_len <= 0 or len(text) < max_len:
         return text
 
-    return text[:max_len] + "\n(skiped...)"
+    return text[:max_len] + "\n(ellipsised...)"

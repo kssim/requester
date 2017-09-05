@@ -39,7 +39,7 @@ def process_with_request_file(options):
     session.update_body(body)
 
     request_url = make_request_url(options.host, options.port, uri)
-    session.send(request_url)
+    session.send(request_url, verbose_detail=options.verbose)
     return 0
 
 
@@ -71,7 +71,7 @@ def process_with_pcap_file(options):
         start_line += response.reason.split(" ")
         response_data.append((stream[DST_IP], stream[SRC_IP], start_line, response.headers, response.text))
 
-    pcap.comparison_response(response_data)
+    pcap.comparison_response(response_data, options.verbose)
     return 0
 
 
@@ -84,6 +84,7 @@ def main():
     option.add_option("-e", "--extraction", dest="extra_mode", action="store_true", help="Extract http request from packet dump file.")
     option.add_option("-c", "--check", dest="check_mode", action="store_true", help="Send an http request in the packet dump and compare the response.")
     option.add_option("--dumy-body", dest="dumy_body_byte", type="int", help="Dummy data is added to request body for the set number of bytes.")
+    option.add_option("--verbose", dest="verbose", action="store_true", help="Show all related information without omissions.")
 
     (options, _) = option.parse_args()
 

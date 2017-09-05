@@ -62,7 +62,7 @@ class Session(object):
         self.allow_redirects = allow_redirects
         self.timeout = timeout
 
-    def send(self, url, verbose=True):
+    def send(self, url, verbose=True, verbose_detail=False):
         try:
             if self.method == "GET":
                 self.response = self.session.get(url, allow_redirects=self.allow_redirects, timeout=self.timeout)
@@ -75,14 +75,16 @@ class Session(object):
             print ("Error : The host(%s) is not reachable" % url)
             return False
 
-        if verbose is True:
-            self.show_request()
-            print ("\n\n")
-            self.show_response()
+        if verbose is False:
+            return True
+
+        self.show_request(verbose_detail)
+        print ("\n\n")
+        self.show_response(verbose_detail)
 
         return True
 
-    def show_request(self):
+    def show_request(self, verbose):
         print ("** REQUEST **")
         print ("======================================================")
         print ("Method : %s" % self.method)
@@ -92,10 +94,11 @@ class Session(object):
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Request body =")
-        print (make_ellipsis(self.request_body))
+        body = self.request_body if verbose else make_ellipsis(self.request_body)
+        print (body)
         print ("======================================================")
 
-    def show_response(self):
+    def show_response(self, verbose):
         print ("** RESPONSE **")
         print ("======================================================")
         print ("Status code : %s" % self.response.status_code)
@@ -106,5 +109,6 @@ class Session(object):
             print ("%s : %s" % (key, value))
         print ("======================================================")
         print ("= Response body =")
-        print (make_ellipsis(self.response.text.encode("utf-8")))
+        body = self.response.text.encode("utf-8") if verbose else make_ellipsis(self.response.text.encode("utf-8"))
+        print (body)
         print ("======================================================")

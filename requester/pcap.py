@@ -81,7 +81,7 @@ class PcapHandler(object):
 
         return False
 
-    def comparison_response(self, response_data):
+    def comparison_response(self, response_data, verbose=False):
         if len(response_data) != len(self.response_data):
             print ("Error : The number of response data does not match.")
             return False
@@ -96,6 +96,19 @@ class PcapHandler(object):
                 print ("The value of the reponse body is same.")
             else:
                 print ("The value of the reponse body is different.")
+
+            if verbose:
+                print ("================================== pcap response =================================")
+                print (pcap_data[HEADERS])
+                print ("")
+                print (pcap_data[BODY])
+                print ("==================================================================================")
+
+                print ("================================ recieved response ===============================")
+                print (recived_data[HEADERS])
+                print ("")
+                print (recived_data[BODY].encode("utf-8").replace("\r\n", "").strip())
+                print ("==================================================================================")
 
         return True
 

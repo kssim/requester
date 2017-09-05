@@ -86,8 +86,8 @@ class TestMakeDumyBody(object):
 class TestMakeEllipsis(object):
 
     @pytest.mark.parametrize("text, max_len, expected", [
-        ("123456", 3, "123\n(skiped...)"),
-        ("1234567890123", 10, "1234567890\n(skiped...)"),
+        ("123456", 3, "123\n(ellipsised...)"),
+        ("1234567890123", 10, "1234567890\n(ellipsised...)"),
         ("123", 5, "123"),
         ("123", -1, "123"),
         ("123", 0, "123")
