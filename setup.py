@@ -17,9 +17,12 @@ requires = [
 with open("README.md", "r") as f:
     readme = f.read()
 
+with open("VERSION", "r") as f:
+    version = f.read()
+
 setup(
     name = "requester",
-    version = "0.6.1",
+    version = version,
     description = "Python HTTP/HTTPS Requester.",
     long_description = readme,
     author = "kssim",
