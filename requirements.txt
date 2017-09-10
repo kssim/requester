@@ -3,6 +3,7 @@ scapy==2.3.3
 pytest==3.2.1
 pytest-cov==2.5.1
 urllib3==1.22
+PySocks
 codecov
 tox
 detox
