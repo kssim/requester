@@ -62,6 +62,12 @@ div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}
     def setup(self):
         self.pcap_handler = PcapHandler(self.pcap_file)
 
+    def tear_down(self):
+        try:
+            os.remove(self.extract_file_name)
+        except OSError, e:
+            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+
     def test_read_pcap_file(self):
         assert self.pcap_handler.read_pcap_file() is not None
 
@@ -117,20 +123,12 @@ div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}
         self.pcap_handler.write_request_data()
         assert os.path.isfile(self.extract_file_name) is True
 
-        # teardown
-        try:
-            os.remove(self.extract_file_name)
-        except OSError, e:
-            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+        self.tear_down()
 
     def test_extraction_request(self):
         assert self.pcap_handler.extraction_request() is True
 
-        # teardown
-        try:
-            os.remove(self.extract_file_name)
-        except OSError, e:
-            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+        self.tear_down()
 
     def test_prepare_comparison_response(self):
         assert self.pcap_handler.prepare_comparison_response() is True

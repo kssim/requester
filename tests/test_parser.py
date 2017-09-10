@@ -8,6 +8,15 @@ from requester.parser import (
 )
 
 
+class Teardown(object):
+
+    def remove_temp_file(self, temporary_request_file):
+        try:
+            os.remove(temporary_request_file)
+        except OSError, e:
+            print ("Error : %s is not removed.\n%s" % (temporary_request_file, e))
+
+
 class TestResponseParserWithoutStream(object):
 
     @pytest.fixture(autouse=True)
@@ -490,7 +499,7 @@ class TestRequestFileParserWithoutFileName(object):
         assert getattr(self.request_file_parser, "file_name") == ""
 
 
-class TestRequestFileParserWithFileNameAndValidStreamAndNoBody(object):
+class TestRequestFileParserWithFileNameAndValidStreamAndNoBody(Teardown):
 
     temporary_request_file = "temporary_request_file"
     valid_request_stream = (b"GET / HTTP/1.1\r\n"
@@ -537,14 +546,10 @@ class TestRequestFileParserWithFileNameAndValidStreamAndNoBody(object):
         assert getattr(self.request_file_parser, "body") == body
         assert getattr(self.request_file_parser, "stream") == ""
 
-        # teardown
-        try:
-            os.remove(self.temporary_request_file)
-        except OSError, e:
-            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+        Teardown.remove_temp_file(self, self.temporary_request_file)
 
 
-class TestRequestFileParserWithFileNameAndValidStreamAndBody(object):
+class TestRequestFileParserWithFileNameAndValidStreamAndBody(Teardown):
 
     temporary_request_file = "temporary_request_file"
     valid_request_stream = (b"POST /login HTTP/1.1\r\n"
@@ -595,14 +600,10 @@ class TestRequestFileParserWithFileNameAndValidStreamAndBody(object):
         assert getattr(self.request_file_parser, "body") == body
         assert getattr(self.request_file_parser, "stream") == ""
 
-        # teardown
-        try:
-            os.remove(self.temporary_request_file)
-        except OSError, e:
-            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+        Teardown.remove_temp_file(self, self.temporary_request_file)
 
 
-class TestRequestFileParserWithFileNameAndInValidStreamAndBody(object):
+class TestRequestFileParserWithFileNameAndInValidStreamAndBody(Teardown):
 
     temporary_request_file = "temporary_request_file"
     valid_request_stream = (b"post / HTTP/1.0\r\n"
@@ -652,8 +653,4 @@ class TestRequestFileParserWithFileNameAndInValidStreamAndBody(object):
         assert getattr(self.request_file_parser, "body") != body
         assert getattr(self.request_file_parser, "stream") == ""
 
-        # teardown
-        try:
-            os.remove(self.temporary_request_file)
-        except OSError, e:
-            print ("Error : %s is not removed.\n%s" % (self.temporary_request_file, e))
+        Teardown.remove_temp_file(self, self.temporary_request_file)
