@@ -35,6 +35,10 @@ Options:
   -e, --extraction      Extract http request from packet dump file.
   -c, --check           Send an http request in the packet dump and compare
                         the response.
+  --dumy-body=DUMY_BODY_BYTE
+                        Dummy data is added to request body for the set number
+                        of bytes.
+  --verbose             Show all related information without omissions.
 ```
 
 
@@ -52,6 +56,15 @@ $ requester --host [website] --port [port] --file [request file full path]
 ```
 
 
+* Fills the body with null bytes for the specified number of bytes.
+
+```bash
+$ requester --host [website] --port [port] --dumy-body 1024
+
+$ requester --host [website] --port [port] --file [request file full path] --dumy-body 1024
+```
+
+
 * Extract request file from packet dump.
 
 ```bash
@@ -64,6 +77,21 @@ $ requester -e --pcap [pcap file full path]
 ```bash
 $ requester -c --pcap [pcap file full path]
 ```
+
+
+* Display all messages that are output between transmissions.
+
+
+```bash
+$ requester --host [website] --port [port] --verbose
+
+$ requester --host [website] --port [port] --dumy-body 1024 --verbose
+
+$ requester --host [website] --port [port] --file [request file full path] --verbose
+
+$ requester --host [website] --port [port] --file [request file full path] --dumy-body 1024 --verbose
+```
+
 
 
 # Documentation
